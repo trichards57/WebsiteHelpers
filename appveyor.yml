@@ -1,0 +1,33 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+configuration: Release
+before_build:
+  - cmd: dotnet restore
+  - ps: (Get-Content .\WebsiteHelpers\WebsiteHelpers.csproj).replace('<Version>0.0.0</Version>', '<Version>' + $Env:APPVEYOR_BUILD_VERSION + '</Version>') | Set-Content .\WebsiteHelpers\WebsiteHelpers.csproj
+  - ps: (Get-Content .\WebsiteHelpers\WebsiteHelpers.csproj).replace('<FileVersion>0.0.0</FileVersion>', '<FileVersion>' + $Env:APPVEYOR_BUILD_VERSION + '</FileVersion>') | Set-Content .\WebsiteHelpers\WebsiteHelpers.csproj
+  - ps: (Get-Content .\WebsiteHelpers\WebsiteHelpers.csproj).replace('<InformationalVersion>0.0.0</InformationalVersion>', '<InformationalVersion>' + $Env:APPVEYOR_BUILD_VERSION + '</InformationalVersion>') | Set-Content .\WebsiteHelpers\WebsiteHelpers.csproj
+skip_tags: true
+build:
+  verbosity: minimal
+  project: WebsiteHelpers.sln
+after_build:
+  - cmd: dotnet pack --include-symbols --include-source -c Release
+deploy:
+- provider: GitHub
+  artifact: WebsiteHelpers           
+  draft: false
+  prerelease: false
+  on:
+    branch: master
+  auth_token:
+    secure: mlxIUvXrZV1LAtYt9DXC7hWFCE7oHl3QEFxkKTTrpCYKjyNTeWFpZhrna9zZjEZe
+- provider: NuGet
+  server: https://www.myget.org/F/trichards57/api/v2/package
+  api_key:
+    secure: WwUh/s6u+Z0zdCdYBKhYyozI5WbWo0ZmBqAsRcpIwwahVUzZSFuwCI2yJbOY7CTJ
+  symbol_server: https://www.myget.org/F/trichards57/symbols/api/v2/package
+  skip_symbols: false
+  artifact: WebsiteHelpers
+artifacts:
+  - path: '**/*.nupkg'
+    name: WebsiteHelpers

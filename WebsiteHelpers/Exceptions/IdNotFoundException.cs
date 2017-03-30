@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WebsiteHelpers.Exceptions
 {
@@ -17,6 +15,5 @@ namespace WebsiteHelpers.Exceptions
         public IdNotFoundException(string message, Exception inner) : base(message, inner)
         {
         }
-
     }
 }

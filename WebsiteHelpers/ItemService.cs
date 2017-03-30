@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebsiteHelpers.Exceptions;
 using WebsiteHelpers.Interfaces;
@@ -42,6 +43,8 @@ namespace WebsiteHelpers
                 await Database.SaveChangesAsync();
             }
         }
+
+        public abstract Task<IEnumerable<TModel>> GetAllAsync();
 
         public virtual async Task<TModel> GetAsync(int id)
         {

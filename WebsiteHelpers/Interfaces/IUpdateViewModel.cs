@@ -2,7 +2,8 @@
 {
     public interface IUpdateViewModel<TModel>
     {
-        void UpdateItem(TModel item);
         int Id { get; set; }
+
+        void UpdateItem(TModel item);
     }
 }
