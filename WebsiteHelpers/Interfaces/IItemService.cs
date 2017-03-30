@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace WebsiteHelpers.Interfaces
 {
@@ -7,6 +8,8 @@ namespace WebsiteHelpers.Interfaces
         Task<int> AddAsync(TModel item);
 
         Task DeleteAsync(int id);
+
+        Task<IEnumerable<TModel>> GetAllAsync();
 
         Task<TModel> GetAsync(int id);
 
