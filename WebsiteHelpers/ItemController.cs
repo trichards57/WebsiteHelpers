@@ -61,8 +61,12 @@ namespace WebsiteHelpers
             foreach (var res in valResults)
                 ModelState.AddModelError("", res.ErrorMessage);
 
+            OnValidate(item);
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            OnUpdate(item);
 
             await Service.UpdateAsync(item);
 
@@ -72,16 +76,32 @@ namespace WebsiteHelpers
         [HttpPost]
         public virtual async Task<IActionResult> Post([FromBody]TCreate createModel)
         {
+            var model = createModel.ToItem();
+
+            OnValidate(model);
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var model = createModel.ToItem();
+            OnCreate(model);
 
             var id = await Service.AddAsync(model);
 
             var newItem = await Service.GetAsync(id);
 
             return CreatedAtAction("Get", new { id }, newItem.ToDetail());
+        }
+
+        protected virtual void OnCreate(TModel item)
+        {
+        }
+
+        protected virtual void OnUpdate(TModel item)
+        {
+        }
+
+        protected virtual void OnValidate(TModel item)
+        {
         }
     }
 
