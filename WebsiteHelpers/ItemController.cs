@@ -98,9 +98,6 @@ namespace WebsiteHelpers
         {
             var items = await Service.GetAllAsync();
 
-            if (items == null)
-                return NotFound();
-
             return Ok(items.Select(i => i.ToSummary()));
         }
     }
