@@ -9,8 +9,8 @@ using WebsiteHelpers.Interfaces;
 
 namespace WebsiteHelpers
 {
-    public abstract class ItemController<TModel, TDetails, TCreate, TSummary> : Controller
-        where TModel : class, IDetailable<TDetails>, ISummarisable<TSummary>
+    public abstract class ItemController<TModel, TDetails, TCreate> : Controller
+        where TModel : class, IDetailable<TDetails>
         where TCreate : class, ICreateViewModel<TModel>
     {
         public ItemController(IItemService<TModel> service)
@@ -36,17 +36,6 @@ namespace WebsiteHelpers
                 return NotFound();
 
             return Ok(item.ToDetail());
-        }
-
-        [HttpGet]
-        public virtual async Task<IActionResult> GetAll()
-        {
-            var items = await Service.GetAllAsync();
-
-            if (items == null)
-                return NotFound();
-
-            return Ok(items.Select(i => i.ToSummary()));
         }
 
         [HttpPatch("{id}")]
@@ -93,6 +82,26 @@ namespace WebsiteHelpers
             var newItem = await Service.GetAsync(id);
 
             return CreatedAtAction("Get", new { id }, newItem.ToDetail());
+        }
+    }
+
+    public abstract class ItemController<TModel, TDetails, TCreate, TSummary> : ItemController<TModel, TDetails, TCreate>
+        where TModel : class, IDetailable<TDetails>, ISummarisable<TSummary>
+        where TCreate : class, ICreateViewModel<TModel>
+    {
+        public ItemController(IItemService<TModel> service) : base(service)
+        {
+        }
+
+        [HttpGet]
+        public virtual async Task<IActionResult> GetAll()
+        {
+            var items = await Service.GetAllAsync();
+
+            if (items == null)
+                return NotFound();
+
+            return Ok(items.Select(i => i.ToSummary()));
         }
     }
 }
