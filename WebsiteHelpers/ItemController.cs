@@ -35,7 +35,7 @@ namespace WebsiteHelpers
             if (item == null)
                 return NotFound();
 
-            return Ok(item.ToDetail());
+            return Ok(item.ToDetails());
         }
 
         [HttpPatch("{id}")]
@@ -70,7 +70,7 @@ namespace WebsiteHelpers
 
             await Service.UpdateAsync(item);
 
-            return Ok(item.ToDetail());
+            return Ok(item.ToDetails());
         }
 
         [HttpPost]
@@ -89,7 +89,7 @@ namespace WebsiteHelpers
 
             var newItem = await Service.GetAsync(id);
 
-            return CreatedAtAction("Get", new { id }, newItem.ToDetail());
+            return CreatedAtAction("Get", new { id }, newItem.ToDetails());
         }
 
         protected virtual void OnCreate(TModel item)
