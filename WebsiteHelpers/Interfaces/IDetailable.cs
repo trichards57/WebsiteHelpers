@@ -2,6 +2,6 @@
 {
     public interface IDetailable<TDetail>
     {
-        TDetail ToDetail();
+        TDetail ToDetails();
     }
 }
